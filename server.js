@@ -13,25 +13,20 @@ app.post('/upload', (req, res) => {
   }
 
   const file = req.files.file;
-  const token = Math.floor(Math.random() * 100000 + 1);
 
   const sanitizeString = str => {
     str = str.replace(/[^a-z0-9\.,_-]/gim, '');
-    res = str.toLowerCase();
-    return res.trim();
+    sanatizedStr = str.toLowerCase();
+    return sanatizedStr.trim();
   };
 
   sanitizeString(file.name);
-  file.name = res;
+  file.name = sanatizedStr;
 
-  fs.readdir(uploadDir, (err, files) => {
-    files.forEach(dirFile => {
-      if (file.name === dirFile.name) {
-        file.name += Math.floor(Math.random() * 100000 + 1);
-        return file;
-      }
-    });
-  });
+  file.name =
+    file.name.substring(0, file.name.lastIndexOf('.')) +
+    Math.floor(Math.random() * 100000 + 1).toString() +
+    file.name.substring(file.name.lastIndexOf('.'));
 
   file.mv(`${__dirname}/client/public/uploads/${file.name}`, err => {
     if (err) {

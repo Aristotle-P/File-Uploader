@@ -10,12 +10,12 @@ const FileUpload = () => {
   const [message, setMessage] = useState('');
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
-  const onChange = e => {
+  const handleChange = e => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
   };
 
-  const onSubmit = async e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('file', file);
@@ -32,8 +32,7 @@ const FileUpload = () => {
             )
           );
 
-          // Clear percentage
-          setTimeout(() => setUploadPercentage(0), 10000);
+          setTimeout(() => setUploadPercentage(0), 3000);
         }
       });
 
@@ -54,13 +53,13 @@ const FileUpload = () => {
   return (
     <Fragment>
       {message ? <Message msg={message} /> : null}
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit}>
         <div className="custom-file mb-4">
           <input
             type="file"
             className="custom-file-input"
             id="customFile"
-            onChange={onChange}
+            onChange={handleChange}
           />
           <label className="custom-file-label" htmlFor="customFile">
             {filename}
