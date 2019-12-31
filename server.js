@@ -1,5 +1,7 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
+const fs = require('fs');
+const uploadDir = '/client/public/uploads';
 
 const app = express();
 
@@ -11,12 +13,25 @@ app.post('/upload', (req, res) => {
   }
 
   const file = req.files.file;
+  const token = Math.floor(Math.random() * 100000 + 1);
 
   const sanitizeString = str => {
     str = str.replace(/[^a-z0-9\.,_-]/gim, '');
     res = str.toLowerCase();
     return res.trim();
   };
+
+  sanitizeString(file.name);
+  file.name = res;
+
+  fs.readdir(uploadDir, (err, files) => {
+    files.forEach(dirFile => {
+      if (file.name === dirFile.name) {
+        file.name += Math.floor(Math.random() * 100000 + 1);
+        return file;
+      }
+    });
+  });
 
   file.mv(`${__dirname}/client/public/uploads/${file.name}`, err => {
     if (err) {
