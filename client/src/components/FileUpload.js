@@ -7,7 +7,7 @@ const FileUpload = () => {
   const [file, setFile] = useState('');
   const [filename, setFilename] = useState('Choose File');
   const [uploadedFile, setUploadedFile] = useState({});
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState();
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
   const handleChange = e => {
@@ -40,19 +40,29 @@ const FileUpload = () => {
 
       setUploadedFile({ fileName, filePath });
 
-      setMessage('File Uploaded');
+      setMessage({ msgText: 'File Uploaded', errMsg: null });
     } catch (err) {
       if (err.response.status === 500) {
-        setMessage('There was a problem with the server');
+        setMessage({
+          msgText: 'There was a problem with the server',
+          errMsg: err.response.status
+        });
       } else {
-        setMessage(err.response.data.msg);
+        setMessage({
+          msgText: err.response.data.msg,
+          errMsg: err.response.status
+        });
       }
     }
   };
 
+  const removeMessage = () => {
+    setMessage(null);
+  };
+
   return (
     <Fragment>
-      {message ? <Message msg={message} /> : null}
+      {message ? <Message msg={message} removeMessage={removeMessage} /> : null}
       <form onSubmit={handleSubmit}>
         <div className="custom-file mb-4">
           <input
